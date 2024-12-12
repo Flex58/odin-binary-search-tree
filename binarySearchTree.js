@@ -66,9 +66,12 @@ class Tree{
             index.data = pointer.data
             return
         }
+        
         while(index) {
             if(index.left.data == value || index.right.data == value) {
+
                 let tempIndex = index.left.data == value ? index.left : index.right
+                
                 //if no children/leaf
                 if (!tempIndex.left && !tempIndex.right) {
                     index.left.data == value ? index.left = null : index.right = null
@@ -104,6 +107,20 @@ class Tree{
             }
         }
         return null;
+    }
+
+    find(value) {
+        let index = this.root
+
+        while (index) {
+            if (value < index.data) {
+                index = index.left
+            } else if (value > index.data) {
+                index = index.right
+            } else {
+                return index
+            }
+        }
     }
 }
 
