@@ -122,6 +122,70 @@ class Tree{
             }
         }
     }
+
+    levelOrder(callback, queue = new Array) {
+
+        if (!queue[0]) {
+            queue.push(this.root)
+        }
+    
+        if (!callback) throw new Error("callback required")
+        
+        callback(queue[0])
+        if (queue[0].left != null) {
+            queue.push(queue[0].left)
+        }
+        
+        if (queue[0].right) {
+            queue.push(queue[0].right)
+        }
+
+        queue.shift()
+
+        if (queue[0]) {
+            this.levelOrder(callback, queue)
+        }
+    }
+
+    inOrder(callback, node = this.root) {
+        //left -> data -> right
+        if (node == null) return
+
+        if (!callback) throw new Error("callback required")
+
+        this.inOrder(callback, node.left)
+
+        callback(node)
+
+        this.inOrder(callback, node.right)
+    }
+
+    preOrder(callback, node = this.root) {
+        //data  -> left -> right
+        if (node == null) return
+
+        if (!callback) throw new Error("callback required")
+
+        callback(node)
+
+        this.preOrder(callback, node.left)
+
+        this.preOrder(callback, node.right)
+    }
+
+    postOrder(callback, node = this.root) {
+        //left  -> right -> data
+        if (node == null) return
+
+        if (!callback) throw new Error("callback required")
+
+        this.postOrder(callback, node.left)
+
+        this.postOrder(callback, node.right)
+
+        callback(node)
+    }
+    
 }
 
 
@@ -146,3 +210,6 @@ tree.insert(69)
 prettyPrint(tree.root)
 tree.remove(8)
 prettyPrint(tree.root)
+tree.postOrder((a) => {
+    console.log(a.data)
+})
