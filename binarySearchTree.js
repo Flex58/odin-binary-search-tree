@@ -132,6 +132,7 @@ class Tree{
         if (!callback) throw new Error("callback required")
         
         callback(queue[0])
+
         if (queue[0].left != null) {
             queue.push(queue[0].left)
         }
@@ -219,24 +220,63 @@ class Tree{
         let height = this.heightHelper()
         return height - depth - 1
     }
+
+    isBalanced() {
+        let isBalanced = true;
+
+        this.levelOrder((a) => {
+            let left = this.heightHelper(a.left)
+            let right = this.heightHelper(a.right)
+
+            if (left > right) {
+                if (left - right > 1) return isBalanced = false
+            } else if (right - left > 1 ) return isBalanced = false
+
+        })
+
+        return isBalanced
+    }
+
+    reBalance() {
+        let arr = []
+        this.inOrder((a) => {
+            arr.push(a.data)
+        })
+
+        this.root = this.buildTree(arr)
+    }
+
+    prettyPrint(node = this.root, prefix = "", isLeft = true) {
+        if (node === null) {
+          return;
+        }
+        if (node.right !== null) {
+          this.prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+        }
+        console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+        if (node.left !== null) {
+          this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+        }
+      };
 }
 
 
-const prettyPrint = (node, prefix = "", isLeft = true) => {
-    if (node === null) {
-      return;
-    }
-    if (node.right !== null) {
-      prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-    }
-    console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
-    if (node.left !== null) {
-      prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
-    }
-  };
+
 
 
 let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 arr = getSortedAndUnqiue(arr)
 let tree = new Tree(arr)
-prettyPrint(tree.root)
+tree.prettyPrint()
+console.log(tree.depth(8))
+console.log(tree.height(8))
+console.log(tree.isBalanced())
+tree.insert(100)
+tree.insert(200)
+tree.insert(300)
+tree.insert(400)
+tree.insert(500)
+console.log(tree.isBalanced()) 
+tree.prettyPrint()
+tree.reBalance()
+tree.prettyPrint()
