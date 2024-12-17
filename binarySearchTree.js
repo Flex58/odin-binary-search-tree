@@ -14,10 +14,10 @@ const getSortedAndUnqiue = (arr) => {
 
 class Tree{
     constructor(array){
-        this.root = this.buildTree(array, 0, array.length-1)
+        this.root = this.buildTree(array)
         }
     
-    buildTree(arr, start, end) {
+    buildTree(arr, start = 0, end = arr.length - 1) {
         if (start > end) return null
     
         let mid = start +  Math.floor((end - start) / 2)
@@ -186,6 +186,39 @@ class Tree{
         callback(node)
     }
     
+    depth(node, root = this.root) {
+        let count = -1
+
+        if (root == null) return -1
+
+        if (root.data == node || (count = this.depth(node, root.left)) >= 0 || (count = this.depth(node, root.right)) >= 0 ){
+            return count + 1
+        }
+
+        return count;
+    }
+
+    heightHelper(root = this.root) {
+
+        if (root == null) {
+            return 0
+        }
+
+        let left = this.heightHelper(root.left)
+        let right = this.heightHelper(root.right)
+
+       if (left > right) {
+        return left + 1
+       } else {
+        return right + 1
+       }
+    }
+
+    height(node) {
+        let depth = this.depth(node)
+        let height = this.heightHelper()
+        return height - depth - 1
+    }
 }
 
 
@@ -206,10 +239,4 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 arr = getSortedAndUnqiue(arr)
 let tree = new Tree(arr)
-tree.insert(69)
 prettyPrint(tree.root)
-tree.remove(8)
-prettyPrint(tree.root)
-tree.postOrder((a) => {
-    console.log(a.data)
-})
